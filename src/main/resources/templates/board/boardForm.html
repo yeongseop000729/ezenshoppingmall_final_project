@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Board</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            width: 400px;
+            margin: 0 auto;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        
+        input[type="submit"] {
+            background-color: #4c4c4c;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4c4c4c;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+  <header th:replace="etc/header :: headerFragment"></header>
+<body>
+<br><br><br>
+    <h1>문의사항</h1>
+    <form action="/board" method="post">
+        <label for="boardTitle">제목:</label>
+        <input type="text" id="boardTitle" name="boardTitle" placeholder="Title" /><br />
+        <label for="boardContent">문의사항 내용:</label>
+        <textarea id="boardContent" name="boardContent" placeholder="Content"></textarea><br />
+        <input type="submit" value="등록하기"/>
+    </form>
+     
+    <div>     
+        <a href="/board">게시판 돌아가기</a>  
+        <br><br><br><br>	
+    </div> 
+</body>
+<footer th:replace="etc/footer :: footerFragment"></footer>
+</html>

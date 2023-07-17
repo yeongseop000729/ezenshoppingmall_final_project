@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Review View</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link th:href="@{/css/header.css}" rel="stylesheet" />
+<link th:href="@{/css/footer.css}" rel="stylesheet" />
+<style>
+/* Style code for the page */
+#container {
+	width: 100%;
+	margin: 50px auto;
+	padding-top: 10px;
+}
+
+#board-view {
+	margin-bottom: 20px;
+	margin-left: 100px;
+}
+
+.board-info p {
+	margin-bottom: 5px;
+}
+
+.comment-list {
+	margin-bottom: 20px;
+}
+
+.comment-list h3 {
+	margin-bottom: 10px;
+}
+
+.comment-list ul {
+	list-style: none;
+	padding: 0;
+}
+
+.comment-list li {
+	margin-bottom: 10px;
+}
+
+.comment-list p {
+	margin-bottom: 5px;
+}
+
+.comment-form h3 {
+	margin-bottom: 10px;
+}
+
+.comment-form textarea {
+	width: 100%;
+	margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+	<header th:replace="etc/header :: headerFragment"></header>
+	<div id="container">
+		<div id="board-view">
+			<h2>Review</h2>
+			<div class="board-info">
+				<p>
+					Review No: <span th:text="${review.reviewNo}"></span>
+				</p>
+				<p>
+					Title: <span th:text="${review.reviewTitle}"></span>
+				</p>
+				<p>
+					Writer: <span th:text="${review.member.memberId}"></span>
+				</p>
+				<p>
+					Updated: <span
+						th:text="${#temporals.format(review.reviewUpdated, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				</p>
+				<p>
+					Views:
+					<!-- Display view count or add an icon -->
+				</p>
+			</div>
+			<div class="board-content">
+				<p>
+					Review Content: <span th:text="${review.reviewContent}"></span>
+				</p>
+			</div>
+
+			<!-- Edit button -->
+			<a th:href="@{/review/edit/{reviewNo}(reviewNo=${review.reviewNo})}">
+				<button type="button" class="btn btn-outline-success" th:if="${session.loggedInUser != null}">Edit</button>
+			</a>
+
+			<!-- Delete button -->
+			<a
+				th:href="@{/review/delete/{reviewNo}(reviewNo=${review.reviewNo})}">
+				<button type="button" class="btn btn-outline-warning" th:if="${session.loggedInUser != null}">Delete</button>
+			</a>
+		</div>
+</body>
+<footer th:replace="etc/footer :: footerFragment"></footer>
+</html>

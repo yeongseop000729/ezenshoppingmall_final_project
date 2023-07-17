@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Edit Review</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+h2 {
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+form {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	width: 400px; /* 수정: 박스 너비 조정 */
+	margin: 0 auto; /* 수정: 가운데 정렬 */
+}
+
+label {
+	display: block;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+input[type="text"], textarea {
+	width: 100%;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	margin-bottom: 20px;
+}
+
+button[type="submit"] {
+	background-color: #4c4c4c;
+	color: #fff;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+a {
+	display: block;
+	text-align: center;
+	margin-top: 20px;
+	color: #4c4c4c;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+	 <header th:replace="etc/header :: headerFragment"></header>
+	 <br><br><br>
+	<h2>리뷰 수정하기</h2>
+	<form th:object="${review}"
+		th:action="@{/review/edit/{reviewNo}(reviewNo=${review.reviewNo})}"
+		method="post">
+		<input type="hidden" th:field="*{reviewNo}" /> <input type="hidden"
+			th:field="*{member.memberId}" />
+
+		<div>
+			<label>Review ID:</label> <input type="text" th:field="*{reviewNo}"
+				readonly="readonly" />
+		</div>
+
+		<div>
+			<label>Member ID:</label> <input type="text"
+				th:field="*{member.memberId}" readonly="readonly" />
+		</div>
+		<div>
+			<label>Title:</label> <input type="text" th:field="*{reviewTitle}" />
+		</div>
+
+		<div>
+			<label>Content:</label>
+			<textarea th:field="*{reviewContent}"></textarea>
+		</div>
+
+		<button type="submit">수정하기</button>
+	</form>
+
+	<a href="/review">돌아가기</a>
+	<br><br><br>
+<footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

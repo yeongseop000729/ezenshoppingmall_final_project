@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Category</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 4px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid lightgray;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4c4c4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type="button"] {
+            padding: 10px 20px;
+            background-color: #4c4c4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 30px;
+        }
+        
+
+        a {
+            display: block;
+            margin-top: 10px;
+            color: #4c4c4c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>카테고리 추가</h1>
+
+    <form th:action="@{/categories/add}" method="post">
+        <label>Category Name:</label>
+        <input type="text" name="categoryName">
+        <button type="submit">추가하기</button>
+        
+    </form>
+	
+    <a href="/categories">다시입력</a>
+    
+ <button type="button" onclick="window.location.href='/products'">상품 리스트</button>
+</body>
+</html>

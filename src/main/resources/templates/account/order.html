@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<link th:href="@{/css/header.css}" rel="stylesheet" />
+<link th:href="@{/css/footer.css}" rel="stylesheet" />
+<style>
+.order-container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+.order-container table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 40px;
+}
+
+.order-container table td {
+	border: 1px solid #4a4a4a66;
+	border-top: 1px solid black;
+	padding: 10px;
+	font-size: 13px;
+	color: #222222;
+}
+
+.order-container table td.td-left {
+	color: black;
+}
+
+.order-container .bottom-btns {
+	text-align: center;
+}
+
+.order-container #payment-btn {
+	outline: none;
+	border: none;
+	padding: 10px;
+	font-size: 20px;
+	width: 180px;
+	background: linear-gradient(to left, #848484, #151515);
+	font-weight: bold;
+	color: #fff;
+	cursor: pointer;
+}
+
+.order-container #payment-btn:hover {
+	opacity: 0.8;
+}
+
+.product-context .product-table .product-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.product-context .product-table .product-list .product-qty {
+	font-size: 15px;
+}
+</style>
+<body>
+	<header th:replace="etc/header :: headerFragment"></header>
+	<br>
+	<br>
+	<br>
+	<div class="order-container">
+		<form th:action="@{/order/create}" method="post">
+
+			<div class="buyer-context">
+				<h3>주문/결제</h3>
+				<table class="buyer-table">
+					<colgroup>
+						<col width="135">
+						<col width="*">
+					</colgroup>
+					<tbody>
+<!--						<tr>-->
+<!--							<td class="td-left">이름</td>-->
+<!--							<td th:text="${member.memberName}"></td>-->
+<!--						</tr>-->
+<!--						<tr>-->
+<!--							<td class="td-left">이메일</td>-->
+<!--							<td th:text="${member.memberEmail}"></td>-->
+<!--						</tr>-->
+<!--						<tr>-->
+<!--							<td class="td-left">휴대폰 번호</td>-->
+<!--							<td th:text="${member.memberPhone}"></td>-->
+<!--						</tr>-->
+					</tbody>
+				</table>
+			</div>
+
+			<div class="delivery-context">
+				<h3>받는사람정보</h3>
+				<table class="delivery-table">
+					<colgroup>
+						<col width="135">
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td class="td-left">이름</td>
+							<td><input type="text" name="orderReceiverName" /></td>
+						</tr>
+						<tr>
+							<td class="td-left">배송주소</td>
+							<td><input type="text" name="orderReceiverAddress" /></td>
+						</tr>
+						<tr>
+							<td class="td-left">연락처</td>
+							<td><input type="text" name="orderReceiverPhone" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="product-context">
+				<h3>배송정보</h3>
+				<table class="product-table">
+					<colgroup>
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr th:each="basketProduct : ${basketProductDTO}">
+							<td class="product-list">
+								<input type="hidden" name="product" th:value="${basketProductDTO.productDTO.productNo}" />
+								<span th:text="${basketProductDTO.productDTO.productName}"></span>
+								<input type="hidden" name="orderQty" th:value="${basketProductDTO.basketQty}" />
+								<span th:text="|${basketProductDTO.basketQty}개|" class="product-qty"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="order-context">
+				<h3>결제정보</h3>
+				<table class="order-table">
+					<colgroup>
+						<col width="135">
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td class="td-left">총결제금액</td>
+							<input type="hidden"
+								   th:value="${basketProductDTO.basketProductAmount}"
+								   name="orderProductAmount" />
+							<input type="hidden"
+								th:value="${basketProductDTO.basketProductAmount}"
+								name="orderPaymentAmount" />
+							<td th:text="${basketProductDTO.basketProductAmount}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="bottom-btns">
+				<button id="payment-btn">결제하기</button>
+			</div>
+		</form>
+	</div>
+
+
+
+
+
+	<br>
+	<br>
+	<br>
+	<footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Board View</title>
+<!-- Bootstrap -->
+<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link th:href="@{/css/header.css}" rel="stylesheet" />
+<link th:href="@{/css/footer.css}" rel="stylesheet" />
+<style>
+#board-view {
+	margin-bottom: 30px;
+}
+
+.board-info {
+	margin-bottom: 20px;
+}
+
+.board-info p {
+	margin-bottom: 10px;
+}
+
+.board-content {
+	margin-bottom: 20px;
+}
+
+.btn {
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn-outline-success {
+	background-color: transparent;
+	border-color: #cccccc;
+	color: #1c1c1c;
+}
+
+.btn-outline-success:hover {
+	background-color: #cccccc;
+	color: #1c1c1c;
+}
+
+.btn-outline-warning {
+	background-color: transparent;
+	border-color: #cccccc;
+	color: #1c1c1c;
+}
+
+.btn-outline-warning:hover {
+	background-color: #cccccc;
+	color: #1c1c1c;
+}
+
+/* 테이블 형식 목록 스타일 */
+.table-container {
+	margin-bottom: 20px;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.table-container th, .table-container td {
+	padding: 10px;
+	border: 1px solid #ccc;
+}
+
+.table-container th {
+	background-color: #f2f2f2;
+	text-align: left;
+}
+
+.table-container tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+#reply {
+	display: flex;
+}
+
+.reply-container {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	margin-bottom: 20px;
+}
+
+.reply-item {
+	flex: 0 0 auto;
+	padding: 10px;
+	box-sizing: border-box;
+	display: flex;
+}
+
+.reply-item p {
+	margin: 5px 0;
+}
+</style>
+
+
+</head>
+<body>
+	<header th:replace="etc/header :: headerFragment"></header>
+
+	<div id="container">
+		<div id="board-view">
+			<h2>문의사항 내용</h2>
+			<div class="board-info">
+				<p>
+					게시물 번호: <span th:text="${board.boardNo}"></span>
+				</p>
+				<p>
+					제목: <span th:text="${board.boardTitle}"></span>
+				</p>
+				<p>
+					작성자: <span th:text="${board.member.memberId}"></span>
+				</p>
+				<p>
+					작성일: <span
+						th:text="${#temporals.format(board.boardUpdated, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				</p>
+				<p>
+					조회수:
+					<!-- 조회수 표시 또는 아이콘 추가 -->
+				</p>
+			</div>
+			<div class="board-content">
+				<p>
+					게시물 내용: <span th:text="${board.boardContent}"></span>
+				</p>
+			</div>
+			<!-- 수정 버튼 -->
+			<a th:href="@{/board/edit/{boardNo}(boardNo=${board.boardNo})}">
+				<button type="button" class="btn btn-outline-success">수정하기</button>
+			</a>
+			<!-- 삭제 버튼 -->
+			<a th:href="@{/board/delete/{boardNo}(boardNo=${board.boardNo})}">
+				<button type="button" class="btn btn-outline-warning">삭제하기</button>
+			</a>
+		</div>
+	</div>
+
+	<!--  댓글 입력창 -->
+	<div class="input-group mb-3">
+		<form id="reply" th:action="@{/reply_write}" method="post">
+			<input type="text" id="content" name="content" class="form-control"
+				placeholder="댓글을 입력해주세요.." aria-label="댓글을 입력해주세요.."
+				aria-describedby="basic-addon2"> <input type="hidden"
+				id="boardNo" name="boardNo" th:value="${board.boardNo}">
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="submit">등록</button>
+			</div>
+		</form>
+	</div>
+	<!-- 댓글 목록 -->
+	<div>
+		<h3>댓글 목록</h3>
+		<div class="reply-container">
+			<div class="reply-item" th:each="reply : ${replies}">
+				
+				<p>
+					<span th:text="${reply.content}"></span>
+				</p>
+				<p>
+					<span style="margin-left: 100px; "th:text="${reply.createDate}"></span>
+				</p>
+				<!-- 삭제 버튼 -->
+				<form th:action="@{/reply_delete}" method="post"
+					style="display: inline;">
+					<input type="hidden" name="replyId" th:value="${reply.replyId}">
+					<input type="hidden" name="boardNo" th:value="${board.boardNo}">
+					<button type="submit" class="btn btn-danger btn-sm">삭제</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

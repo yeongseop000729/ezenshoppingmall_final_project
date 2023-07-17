@@ -1,0 +1,75 @@
+  
+        /* 네비게이션 스타일 */
+        nav {
+          background-color: #1C1C1C;
+          padding: 10px 0;
+        }
+
+        nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+        }
+
+        nav ul li {
+          margin-right: 20px;
+        }
+
+        nav ul li a {
+          text-decoration: none;
+          color: #fff;
+        }
+
+       
+       
+        /* 헤더 스타일 */
+        header {
+          background-color: #1C1C1C;
+          color: #fff;
+          padding: 10px 0;
+          text-align: center;
+          position: relative;
+        }
+
+        header ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+       
+        }
+
+
+        header ul li {
+          margin-right: 20px;
+        }
+
+        header ul li:last-child {
+          margin-right: 0;
+        }
+
+        header ul li a {
+          text-decoration: none;
+          color: #fff;
+        }
+
+        header p {
+          margin-left: auto;
+          font-size: 14px;
+          color: #fff;
+        }
+
+        .logo {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 350px;
+        }
+        
+        .custom-font {
+ 		 font-size: 18px; /* 폰트 크기 조정 */
+ 		 display: inline-block;
+         justify-content: center;
+		}
+		

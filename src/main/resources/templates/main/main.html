@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>쇼핑몰 메인화면</title>
+<link th:href="@{/css/header.css}" rel="stylesheet" />
+<link th:href="@{/css/footer.css}" rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<link rel="stylesheet" href="css/main.css">
+</head>
+<header th:replace="etc/header :: headerFragment"></header>
+<body>
+
+
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				<img src="image/main_img.jpg" alt="Image 1">
+			</div>
+			<div class="swiper-slide">
+				<img src="image/main_img1.jpg" alt="Image 2">
+			</div>
+			<div class="swiper-slide">
+				<img src="image/main_img2.jpg" alt="Image 3">
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="best-prd-title2">NEW ITEMS</div>
+	<div class="best-pre-title">매주 업데이트 되는 신상품을 가장 먼저 만나보세요!</div>
+
+	<div id="productTitle"></div>
+
+	<div id="productList">
+
+
+		<div class="product">
+			<tr th:each="product : ${products}">
+				<ul>
+					<a th:href="@{'/products/' + ${product.productNo}}"> 
+						<img th:if="${product.productImage1 != null}" th:src="@{'/products/image/' + ${product.productNo} + '/1'}" alt="Product Image 1" class="p_img">
+						<li id="name" th:text="${product.productName}"></li>
+						<li id="price" th:text="${product.productPrice}"></li>
+
+					</a>
+				</ul>
+			</tr>
+		</div>
+
+	</div>
+
+
+	<div>
+		<ul>
+			<!-- 상품 목록을 동적으로 생성 -->
+			<li th:each="product : ${newArrivals}">
+				<h3 th:text="${product.name}"></h3>
+				<p th:text="${product.description}"></p>
+				<p th:text="${product.price}"></p>
+			</li>
+		</ul>
+	</div>
+
+
+	<footer th:replace="etc/footer :: footerFragment"></footer>
+
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+	<script>
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+        }
+    });
+</script>
+</body>
+</html>

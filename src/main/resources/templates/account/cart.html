@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+<title>장바구니</title>
+
+<style>
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type=number] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
+* {
+	list-style: none;
+	text-decoration: none;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+#cart-container {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tfoot td {
+  font-weight: bold;
+}
+
+tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* 이전에 제공된 CSS 스타일을 유지합니다 */
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-input input {
+  width: 50px;
+  text-align: center;
+}
+
+.quantity-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.quantity-buttons button {
+  padding: 5px;
+  font-weight: bold;
+  border: none;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.quantity-buttons button:hover {
+  background-color: #e0e0e0;
+}
+
+.buy-btn {
+  width: 15%;
+  height: 40px;
+  border: 0;
+  outline: none;
+  border-radius: 30px;
+  background: linear-gradient(to left, #848484, #151515);
+  color: white;
+  font-size: 1em;
+  letter-spacing: 2px;
+  
+  /* 가운데 정렬을 위한 스타일 추가 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+</style>
+</head>
+  <header th:replace="etc/header :: headerFragment"></header>
+<body>
+
+	
+	<div id="cart-container">
+	<br><br><br>
+	<h1>장바구니</h1>
+
+
+		<table>
+			<thead>
+				<tr>
+					<th>상품명</th>
+					<th>가격</th>
+					<th>수량</th>
+					<th>총 가격</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<th:block th:if="${basketProducts != null}">
+				
+				<tr th:each="basketProduct : ${basketProducts}">
+					
+					<td>
+						<div th:text="${basketProduct.product.productName}"></div>
+					</td>
+					<td>
+						<div th:text="${basketProduct.product.productPrice}" class="productPrice"></div>
+					</td>
+					<td>     
+						<input type="hidden" th:value="${basketProduct.basketProductNo}" class="basketProductNo" />
+						<input type="hidden" th:value="${basketProduct.basket.basketNo}" class="basketNo" />
+						<input type="hidden" th:value="${basketProduct.product.productNo}" class="productNo"/>
+				        <div class="quantity-input">
+				          <button class="quantity-decrease">-</button>
+				          <input type="number" min="1" th:value="${basketProduct.basketQty}" name="basketQty" class="basketQty"/>
+				          <button class="quantity-increase">+</button>
+				        </div>
+					</td>
+					<td style="display:flex; position: relative; align-items: center;">
+						<span th:text="${basketProduct.basketProductAmount}" class="basketProductAmount"></span>
+						<span style="position:absolute; right: 10px;">
+							<a th:href="@{/cart/delete/{basketNo}/{basketProductNo}(basketProductNo=${basketProduct.basketProductNo},basketNo=${basketProduct.basket.basketNo})}" class="delete-btn" style="font-size:18px; font-weight:bold; color:#000;">x</a>
+						</span>	
+					
+					</td>
+
+				</tr>
+			</tbody>
+
+			<tfoot>
+				<tr>
+					<td colspan="3">총 합계</td>
+					<td th:if="${basket != null}" th:text="|${basket.basketAmount}원|" class="basketAmount"></td>
+				</tr>
+			</tfoot>
+				
+		</table>
+		<br><br><br>
+		
+		<button type="button"  class="buy-btn">구매하기</button>
+		<br><br><br>
+		
+		</th:block>
+
+		<div th:if="${basketProducts == null}">
+			<div th:text="${msg}"></div>
+		</div>
+
+	</div>
+	
+
+	
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+
+	
+	
+	
+ 	
+	const increaseBtn = document.querySelectorAll('.quantity-increase');
+	const decreaseBtn = document.querySelectorAll('.quantity-decrease');
+	const basketNo = document.querySelectorAll('.basketNo');
+	const basketProductNo = document.querySelectorAll('.basketProductNo');
+	const basketQty = document.querySelectorAll('.basketQty');
+	const productNo = document.querySelectorAll('.productNo');
+	
+	let thisBasketNo = null;
+	let thisBasketProductNo = null;
+
+	
+
+	const buyBtn = document.querySelector('#cart-container .buy-btn');
+
+	buyBtn.addEventListener('click', e => {
+		e.preventDefault();
+
+		const data = {
+			basketProductDTOs : [
+
+			]
+		};
+
+		basketNo.forEach((ele,index) => {
+			const basketProducts = {
+				basketProductNo : basketProductNo[index].value,
+			}
+			data.basketProductDTOs.push(basketProducts);
+
+		})
+		fetch("https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/buy", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+				.then(response => {
+					if (response.ok) {
+						return response.text().then((encodedItem) => {
+							window.location.href = `https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/buy?${encodedItem}`;
+						})
+					} else {
+
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+
+				});
+	})
+
+
+      
+	
+	
+	// + 버튼 클릭
+	increaseBtn.forEach((ele, index) => {
+		ele.addEventListener('click', function() {
+			let itemQty = this.parentNode.querySelector('input[type="number"]');
+			itemQty.value++;
+			// update한 basketNo
+			thisBasketNo = basketNo[index].value;
+			// update한 상품 번호
+			thisBasketProductNo = basketProductNo[index].value;
+			
+			updateQty(thisBasketNo, thisBasketProductNo, itemQty.value);
+		})
+	}) 
+	
+	// - 버튼 클릭
+	decreaseBtn.forEach((ele, index) => {
+		ele.addEventListener('click', function() {
+			let itemQty = this.parentNode.querySelector('input[type="number"]');
+		    if (parseInt(itemQty.value) > 1) {
+		    	itemQty.value--;
+		    	thisBasketNo = basketNo[index].value;
+		    	thisBasketProductNo = basketProductNo[index].value;
+	
+		    	updateQty(thisBasketNo, thisBasketProductNo, itemQty.value);
+			}
+		})
+
+	}) 
+	
+	function updateQty(basketNo, thisBasketProductNo, itemQty) {
+		const data = {
+			basketProductNo : thisBasketProductNo,
+			basketNo: basketNo,
+			basketQty: itemQty,
+		};
+		
+ 	    fetch("https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/update", {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	          },
+	        body: JSON.stringify(data),
+	      })
+	        .then(response => {
+	        	window.location.href = "https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/cart";
+	        })
+	        .catch(err => {
+	          console.log(err)
+	        });
+	}
+	
+
+	</script>
+
+	<footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

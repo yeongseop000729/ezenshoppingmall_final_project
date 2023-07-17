@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 리스트</title>
+
+    <link th:href="@{/css/allProduct.css}" rel="stylesheet" />
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+
+</head>
+   <header th:replace="etc/header :: headerFragment"></header>
+<body>
+ 
+    <div class="container">
+        <br>
+<form th:action="@{/products}" method="get" class="search-form">
+    <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" class="search-input">
+    <button type="submit" class="search-button">검색</button>
+</form>
+
+        <br>
+
+        <!-- 카테고리 필터링을 위한 카테고리 리스트 추가 -->
+       <div id="all-category">
+    <ul>
+        <li>
+            <a th:href="@{/products}">전체 카테고리</a>
+        </li>
+        <li th:each="category : ${categories}">
+             <a th:href="@{/categories/products/{categoryId}(categoryId=${category.categoryNo})}" th:text="${category.categoryName}"></a>
+        </li>
+    </ul>
+</div>
+
+        <br><br><br>
+
+        <div class="product-grid">
+            <div th:each="product : ${products}" class="product-card">
+                <a th:href="@{'/products/' + ${product.productNo}}">
+                     <img th:if="${product.productImage1 != null}" th:src="@{'/products/image/' + ${product.productNo} + '/1'}" alt="Product Image 1">
+                </a>
+                 
+                    
+                <a th:href="@{'/products/' + ${product.productNo}}" class="product-name"
+                   th:text="${product.productName}"></a>
+                <p th:text="${product.productDescription}"></p>
+                <p class="product-price" th:text="${product.productPrice} + '원'"></p>
+                <div class="product-actions">
+                    <a th:href="@{/products/{productId}/edit(productId=${product.productNo})}" th:if="${session.isAdmin}"
+                       class="action-btn">Edit</a>
+                    <form th:action="@{/products/{productId}/delete(productId=${product.productNo})} " method="post"
+                          th:if="${session.isAdmin}">
+                        <button type="submit" class="action-btn" onclick="return confirmDelete()">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <a th:href="@{/products/add(memberId=${session.isAdmin})}" th:if="${session.isAdmin}"
+           class="action-btn">상품 추가하기</a>
+        <a th:href="@{/categories(memberId=${session.isAdmin})}" th:if="${session.isAdmin}"
+           class="action-btn">카테고리 추가하기</a>
+           
+   <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+  <a th:if="${page != nowPage}" th:href="@{/products(page = ${page - 1}, searchKeyword = ${param.searchKeyword})}" th:text="${page}"></a>
+  <strong th:if = "${page == nowPage}" th:text="${page}" style="color : red"></strong>
+  </th:block>
+
+    </div>
+    <script>
+        function confirmDelete() {
+            return confirm("상품을 삭제 하시겠습니까?");
+        }
+    </script>
+
+</body>
+<footer th:replace="etc/footer :: footerFragment"></footer>
+</html>

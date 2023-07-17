@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/53a8c415f1.js" crossorigin="anonymous"></script>
+      <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+li {
+  list-style: none;
+}
+
+.wrap {
+  width: 100%;
+  height: 145vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.login {
+  width: 30%;
+  height: 1000px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  flex-direction: column;
+}
+
+h2 {
+  color:#2E2E2E;
+  font-size: 2em;
+}
+.login_sns {
+  padding: 20px;
+  display: flex;
+}
+
+.login_sns li {
+  padding: 0px 15px;
+}
+
+.login_sns a {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 50px;
+  background: white;
+  font-size: 20px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4), -3px -3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.register_id {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.register_id input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+
+.register_pw {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register_pw input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+
+.register_phone {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register_Phone input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+
+.register_Address {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register_Address input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+.register_Email {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register_Email input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+
+.register_Name {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register_Name input {
+  width: 100%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  padding: 0px 20px;
+  border: 1px solid lightgray;
+  outline: none;
+}
+.login_etc {
+  padding: 10px;
+  width: 80%;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.submit {
+  margin-top: 50px;
+  width: 80%;
+}
+.submit button {
+  width: 120%;
+  height: 50px;
+  border: 0;
+  outline: none;
+  border-radius: 40px;
+  background: linear-gradient(to left, #848484, #151515);
+  color: white;
+  font-size: 1.2em;
+  letter-spacing: 2px;
+  }
+  .reset button {
+  width: 95%;
+  height: 50px;
+  border: 0;
+  outline: none;
+  border-radius: 40px;
+  background: linear-gradient(to left, #848484, #151515);
+  color: white;
+  font-size: 1.2em;
+  letter-spacing: 2px;
+  margin-top: 5px;
+  }
+  
+  .register_id button {
+  width: 30%;
+  height: 30px;
+  border: 0;
+  outline: none;
+  border-radius: 40px;
+  background: linear-gradient(to left, #848484, #151515);
+  color: white;
+  font-size: 0.5em;
+  letter-spacing: 2px;
+  margin: 5px auto;
+  display: block;
+}
+
+
+  
+    </style>
+        <link th:href="@{/css/header.css}" rel="stylesheet" />
+
+    <br>
+    <script>
+    function checkUsername() {
+        var memberId = document.getElementById("memberId").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/check-username", true);
+        xhr.setRequestHeader("Content-Type", "text/plain");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var isDuplicate = JSON.parse(xhr.responseText);
+                    var message = document.getElementById("duplicateMessage");
+                    if (isDuplicate) {
+                        message.innerHTML = "중복된 아이디입니다. 다른 아이디를 입력해주세요.";
+                        message.style.color = "red";
+                    } else {
+                        message.innerHTML = "아이디가 확인되었습니다.";
+                        message.style.color = "green";
+                    }
+                } else {
+                    // 서버에서 오류 응답을 반환한 경우 처리
+                    var message = document.getElementById("duplicateMessage");
+                    message.innerHTML = "서버에서 오류가 발생했습니다.";
+                    message.style.color = "red";
+                }
+            }
+        };
+        xhr.send(memberId);
+    }
+</script>
+<script>
+           function validatePassword() {
+               var password = document.getElementById("memberPassword").value;
+               var confirmPassword = document.getElementById("confirmPassword").value;
+               
+               if (password !== confirmPassword) {
+                   alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                   return false;
+               }
+               return true;
+           }
+           </script>
+</head>
+    <header th:replace="etc/header :: headerFragment"></header>
+<body>
+
+  <div class="wrap">
+        <div class="login">
+            <h2>회원가입</h2>
+           <form action="/register" method="post" th:object="${member}">   
+           
+         <div class="register_id">
+             <label for="memberId">Id:</label>
+             <input type="text" id="memberId" name="memberId" placeholder="Id" required/>
+             <button type="button" onclick="checkUsername()">중복 확인</button>
+             <span id="duplicateMessage"></span>
+         </div>
+            <div class="register_pw">
+                 <h4>Password :</h4>
+                 <input type="password" name="memberPassword" id="memberPassword" placeholder="Password" required/>
+             </div>
+              <div class="register_pw">
+              <h4>Confirm Password :</h4>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required/>
+            </div>
+              <div class="register_Address">
+                <h4>Address    :</h4>
+                <input type="text" name="memberAddress" id="memberAddress" placeholder="Address" required/>
+            </div>
+               
+                <div class="register_Name">
+                <h4>Name :</h4>
+                <input type="text" name="memberName" id="memberName" placeholder="Name" required/>
+            </div>
+            
+              <div class="register_Phone">
+               <label for="membebPhone">Phone:</label>
+               <input type="text" id="memberPhone" name="memberPhone" placeholder="Phone" required/>
+             </div>
+              <div class="register_Email">
+               <label for="memberEmail">Email:</label>
+               <input type="email" id="memberEmail" name="memberEmail" placeholder="Email" required/>
+             </div>
+           
+            <div class="login_etc">
+                <div class="checkbox">
+   
+                </div>
+                <div class="forgot_pw">
+                <a href=""></a>
+            </div>
+            </div>
+                 <div class="submit">
+                    <button type="submit" onclick="return validatePassword()">회원가입</button>
+               </div>
+            <div class="reset">    
+                 <button type="reset" onclick="window.location.href = '/'">돌아가기</button>
+            </div>   
+        </div>
+    </div>
+    <br><br>
+    </form>   
+    <footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

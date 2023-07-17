@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>상품 추가</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+    
+        
+        form {
+        	margin-left: 300px;
+            width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 4px;
+        }
+        
+        h1 {
+        	margin-top: 50px;
+        	margin-left: 800px;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid lightgray;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        textarea {
+            height: 200px;
+        }
+        
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4c4c4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+           	button[type="button"] {
+            padding: 10px 20px;
+            background-color: #4c4c4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        a {
+            color: #4c4c4c;
+            text-decoration: none;
+	        }
+        
+        .uploaded-image {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .remove-image {
+            background-color: #d62828;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+     <link th:href="@{/css/header.css}" rel="stylesheet" />
+     <header th:replace="etc/header :: headerFragment"></header>
+</head>
+<body>
+	<h1>상품 추가</h1>
+	<form id="addProductForm" th:object="${product}" th:action="@{/products/add}" method="post" enctype="multipart/form-data">
+
+		<div>
+			<label>상품이름:</label> <input type="text" 
+				th:field="*{productName}" required>
+		</div>
+		<div>
+			<label>상품설명:</label>
+			<textarea th:field="*{productDescription}"></textarea>
+		</div>
+		<div>
+			<label>상품가격:</label> <input type="number"
+				th:field="*{productPrice}" required>
+		</div>
+		<div>
+			<label>이미지1:</label> <input type="file" id="image1" name="image1" />
+		</div>
+		<div>
+			<label>이미지2:</label> <input type="file" id="image2" name="image2" />
+		</div>
+		<div>
+			<label>이미지3:</label> <input type="file" id="image3" name="image3" />
+		</div>
+		<div>
+			<label>카테고리:</label> 
+			<select name="categoryId">
+				<option value="">※카테고리를 설정하세요※</option>
+				<option th:each="category : ${categories}" th:value="${category.categoryNo}" th:text="${category.categoryName}"></option>
+			</select>
+		</div>
+		<br>
+		<button type="submit"  onclick="window.location.href='/products'">추가하기</button>
+		<button type="button" onclick="window.location.href='/products'">상품 리스트</button>
+	</form>
+
+	<!-- JavaScript와 AJAX 코드 -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		// 폼 제출 시 AJAX 요청 보내기
+		$("#addProductForm").submit(function(event) {
+			event.preventDefault(); // 기본 제출 동작 막기
+
+			var formData = new FormData(this); // 폼 데이터 가져오기
+
+			$.ajax({
+				url: $(this).attr("action"), // 폼의 액션 URL 가져오기
+				type: $(this).attr("method"), // 폼의 메서드 가져오기
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					// 성공적으로 업로드 및 추가되었을 때 처리 로직
+					alert("상품추가에 성공했습니다!");
+					clearForm(); // 폼 초기화
+				},
+				error: function() {
+					alert('상품추가 실패');
+				}
+			});
+		});
+
+		// 폼 초기화 함수
+		function clearForm() {
+			$("#addProductForm")[0].reset();
+		}
+		
+		
+		// 이미지올릴때 그 이미지 확인
+		$(document).ready(function() {
+			  // 파일 입력 요소 가져오기
+			  var imageInputs = $('input[type="file"]');
+
+			  // 파일 입력의 변경사항
+			  imageInputs.on('change', function() {
+			    var fileInput = $(this)[0];
+			    var files = fileInput.files;
+
+			    // 이전에 표시된 이미지 제거
+			    $(fileInput).siblings('.uploaded-image').remove();
+
+			    // 각 파일을 반복한다
+			    for (var i = 0; i < files.length; i++) {
+			      var file = files[i];
+			      var reader = new FileReader();
+
+			      // Closure to capture the file information
+			      reader.onload = (function(theFile) {
+			        return function(e) {
+			          // 새 이미지 요소 만들기
+			          var img = $('<img>', {
+			            class: 'uploaded-image',
+			            src: e.target.result,
+			            alt: theFile.name,
+			            width: '100px',
+			            height: '100px'
+			          });
+
+			          // 제거 버튼 만들기
+			          var removeBtn = $('<button>', {
+			            class: 'remove-image',
+			            text: '삭제',
+			            click: function() {
+			              $(this).siblings('img').remove();
+			              $(this).remove();
+			              $(fileInput).val('');
+			            }
+			          });
+
+			          // Create a container div for the image and remove button
+			          var container = $('<div>').append(img, removeBtn);
+
+			          // Append the container to the parent div
+			          $(fileInput).parent().append(container);
+			        };
+			      })(file);
+
+			      reader.readAsDataURL(file);
+			    }
+			  });
+			});
+	</script>
+</body>
+</html>

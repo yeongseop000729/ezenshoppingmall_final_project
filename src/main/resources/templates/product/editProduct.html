@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        textarea,
+        input[type="number"] {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        
+        button[type="submit"] {
+            background-color: #4c4c4c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4c4c4c;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="etc/header :: headerFragment"></header>
+    <h2>상품 수정</h2>
+    <br><br>
+    <form th:object="${product}" th:action="@{/products/edit(productId=${product.productNo})}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{productNo}">
+        <div>
+            <label>상품 이름:</label>
+            <input type="text" th:field="*{productName}" required>
+        </div>
+        <div>
+            <label>상품 설명:</label>
+            <textarea th:field="*{productDescription}"></textarea>
+        </div>
+        <div>
+            <label>상품 가격:</label>
+            <input type="number" th:field="*{productPrice}" required>
+        </div>
+        <div>
+			<label>이미지1:</label> <input type="file" id="image1" name="image1" />
+			
+		</div>
+		<div>
+			<label>이미지2:</label> <input type="file" id="image2" name="image2" />
+		</div>
+		<div>
+			<label>이미지3:</label> <input type="file" id="image3" name="image3" />
+		</div>
+      	<div>
+        <label>카테고리:</label> 
+			<select name="category">
+				<option value="">※카테고리를 설정하세요※</option>
+				 <option th:each="category : ${categories}" th:value="${category.categoryNo}" th:text="${category.categoryName}" 
+				 th:selected="${product.category.categoryNo == category.categoryNo}"></option>
+			</select>
+			<br><br>
+		</div>
+        <button type="submit">업데이트 하기</button>
+    </form>
+    <a th:href="@{/products}">돌아가기</a>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		// 폼 제출 시 AJAX 요청 보내기
+		$("#addProductForm").submit(function(event) {
+			event.preventDefault(); // 기본 제출 동작 막기
+
+			var formData = new FormData(this); // 폼 데이터 가져오기
+
+			$.ajax({
+				url: $(this).attr("action"), // 폼의 액션 URL 가져오기
+				type: $(this).attr("method"), // 폼의 메서드 가져오기
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					// 성공적으로 업로드 및 추가되었을 때 처리 로직
+					alert("상품추가에 성공했습니다!");
+					clearForm(); // 폼 초기화
+				},
+				error: function() {
+					alert('상품추가 실패');
+				}
+			});
+		});
+
+		// 폼 초기화 함수
+		function clearForm() {
+			$("#addProductForm")[0].reset();
+		}
+		
+		
+		// 이미지올릴때 그 이미지 확인
+		$(document).ready(function() {
+			  // 파일 입력 요소 가져오기
+			  var imageInputs = $('input[type="file"]');
+
+			  // 파일 입력의 변경사항
+			  imageInputs.on('change', function() {
+			    var fileInput = $(this)[0];
+			    var files = fileInput.files;
+
+			    // 이전에 표시된 이미지 제거
+			    $(fileInput).siblings('.uploaded-image').remove();
+
+			    // 각 파일을 반복한다
+			    for (var i = 0; i < files.length; i++) {
+			      var file = files[i];
+			      var reader = new FileReader();
+
+			      // Closure to capture the file information
+			      reader.onload = (function(theFile) {
+			        return function(e) {
+			          // 새 이미지 요소 만들기
+			          var img = $('<img>', {
+			            class: 'uploaded-image',
+			            src: e.target.result,
+			            alt: theFile.name,
+			            width: '100px',
+			            height: '100px'
+			          });
+
+			          // 제거 버튼 만들기
+			          var removeBtn = $('<button>', {
+			            class: 'remove-image',
+			            text: '삭제',
+			            click: function() {
+			              $(this).siblings('img').remove();
+			              $(this).remove();
+			              $(fileInput).val('');
+			            }
+			          });
+
+			          // Create a container div for the image and remove button
+			          var container = $('<div>').append(img, removeBtn);
+
+			          // Append the container to the parent div
+			          $(fileInput).parent().append(container);
+			        };
+			      })(file);
+
+			      reader.readAsDataURL(file);
+			    }
+			  });
+			});
+	</script>
+    
+</body>
+<br><br><br>
+<footer th:replace="etc/footer :: footerFragment"></footer>
+</html>

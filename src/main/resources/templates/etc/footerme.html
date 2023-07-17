@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.wrap-container {
+    height: auto;
+    min-height: 100%;
+    padding: 60px; /*footer의 높이*/
+}
+
+.footer {
+    height: 60px; /*footer의 높이*/
+    position: relative;
+    transform: translateY(0%);
+    border-top:1px solid #248efe;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #62679b;
+}
+</style>
+
+<body>
+<div th:fragment="footerFragment">
+    <footer class="footer">
+        <p>&copy; 2023 My Shop. All rights reserved.</p>
+    </footer>
+    </div>
+</body>
+
+</html>

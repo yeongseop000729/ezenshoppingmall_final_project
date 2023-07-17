@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<link th:href="@{/css/header.css}" rel="stylesheet" />
+<div th:fragment="headerFragment">
+
+
+   <header>
+   <br><br>
+		<a href="/"><img class="logo" src="/image/logo1.png" alt="Logo"></a>
+		<ul style="margin-top: 200px;">
+			<li class="custom-font"><a href="/"> HOME &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+			<li class="custom-font"><a th:href="@{/products}">SHOP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li> <!--로그인시 마이페이지 띄우기-->
+			<li class="custom-font"><a
+				th:href="@{/mypage/{memberId}(memberId=${session.loggedInUser})}"
+				th:if="${session.loggedInUser}">MYPAGE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+			<li class="custom-font">
+			<a th:href="@{/cart/cart}">CART&nbsp;&nbsp;&nbsp;&nbsp;</a>
+			</li>
+
+			<!--로그인시 회원가입 표시 없애기-->
+			<li class="custom-font"><div th:unless="${session.loggedInUser}">
+					<a th:href="@{/register}">JOIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				</div></li>
+
+			<!-- 로그인 상태일 때 == 로그아웃 버튼 -->
+			<li class="custom-font"><div th:if="${session.loggedInUser}">
+					<a th:href="@{/logout}">LOGOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				</div></li>
+
+			<!-- 로그아웃 상태일 때 == 로그인 버튼 -->
+			<li class="custom-font"><div th:unless="${session.loggedInUser}">
+					<a th:href="@{/login}">LOGIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				</div></li>
+				<br><br>
+
+			<!--사용자 세션 표시-->
+			<li><div th:if="${session.loggedInUser}"> 사용자: <span th:text="${session.loggedInUser}"></span></div></li>
+		</ul>
+	
+		<br>
+		<!--로그인시 회원가입 표시 없애기-->
+		<div th:unless="${session.loggedInUser}">
+		<a th:href="@{/login}" style="font-size: 15px; color: #999999; text-decoration: none;">로그인이 필요합니다.</a>
+
+		</div>
+		<br>
+
+	</header>
+</html>

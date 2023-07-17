@@ -1,0 +1,50 @@
+
+
+.footer-container {
+	display: flex;
+	background-color: #1c1c1c;
+    color: #fff;
+}
+
+.xans-element-.xans-layout.xans-layout-footer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.f-box {
+	background-color: #1C1C1C;
+	color: #fff;
+	padding: 10px 0;
+	text-align: center;
+	position: relative;
+}
+
+.f-box h3 {
+	text-align: center;
+	margin: 30px;
+}
+
+.f-box ul {
+	list-style: none;
+	padding: 10px;
+	margin: 10px;
+}
+
+.f-box ul li {
+	margin-bottom: 10px;
+}
+
+.f-box ul li a {
+	text-decoration: none;
+	color: #fff;
+}
+
+.f-box p {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.element.style {
+	margin-left: 150px;
+}

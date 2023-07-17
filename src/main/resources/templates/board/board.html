@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Board List</title>
+    <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+     <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+    <style>
+        #container {
+            width: 70%;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+        
+        #list {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        #write {
+            text-align: right;
+        }
+        
+        /* Bootstrap modifications */
+        .table > thead {
+            background-color: #cccccc;
+        }
+        .table > thead > tr > th {
+            text-align: center;
+        }
+        .table-hover > tbody > tr:hover {
+            background-color: #e6ecff;
+        }
+        .table > tbody > tr > td {
+            text-align: center;
+        }
+        .table > tbody > tr > #Title {
+            text-align: left;
+        }
+        
+        #paging {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+	 <header th:replace="etc/header :: headerFragment"></header>
+	 <br><br><br>
+	
+	 <div id="container">
+    
+        <div id="list">
+            <b>문의 게시판</b>
+        </div>
+        
+		<div id="write">
+    		  <a th:if="${session.loggedInUser != null}"
+    		  style=" width: 8%; height: 40px; border: 0; outline: none; border-radius: 40px;
+        background: linear-gradient(to right, #848484, #151515); color: white; font-size: 1em;
+        letter-spacing: 2px; text-align: center; display: inline-block; line-height: 40px;" href="/board/create">글쓰기</a>
+		</div>
+        
+        <div>
+        <br>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th width="20%">No</th>
+                        <th width="60%">Title</th>
+                        <th width="10%">Writer</th>
+                        <th width="40%">Updated</th>
+                        <th width="10%">Views</th>
+                    </tr>
+                </thead>
+                <tbody>
+                 <tr th:each="board : ${boards}">
+      			  <td th:text="${board.boardNo}"></td>
+        			  <td id="Title">
+       			   <a th:href="@{/board/boardView(boardNo = ${board.boardNo})}">[[${board.boardTitle}]] </a>   				
+        			<td th:text="${board.member.memberId}"></td>
+        			<td th:text="${board.boardUpdated}"></td>
+        			<td><!-- 조회수 표시 또는 아이콘 추가 --></td>
+   			 </tr>
+                </tbody>
+            </table>
+            <!-- Paging 처리 -->
+            <div id="paging">
+                <!-- 페이징 코드 추가 -->
+
+            </div>
+        </div>
+    </div>
+
+	<footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>

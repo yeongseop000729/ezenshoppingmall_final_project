@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세 페이지</title>
+
+    <style>
+.product-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-images img {
+  max-width: 100%;
+  max-height: 400px;
+  margin: 0 10px;
+  
+}
+
+.product {
+  text-align: center;
+}
+
+.option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.option .price-box {
+  display: flex;
+  align-items: center;
+}
+
+.option .price-box .qty-box {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.option .price-box .qty-box button {
+  font-size: 18px;
+  padding: 0 10px;
+}
+
+.option .price-box .qty-box input[type="number"] {
+  width: 50px;
+  text-align: center;
+}
+
+.option .amount-box {
+  display: flex;
+  align-items: center;
+}
+
+.option .amount-box .amount-input {
+  width: 80px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.option .amount-box span {
+  font-size: 20px;
+}
+
+.payment button {
+  margin-right: 10px;
+  background-color: #4c4c4c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.payment button.basket-btn:hover {
+  background-color: #4c4c4c;
+}
+
+.payment button.buy-btn {
+  background-color: #4c4c4c;
+}
+
+.payment button.buy-btn:hover {
+  background-color: #4c4c4c;
+}
+
+.payment button.wish-btn {
+  background-color: #4c4c4c;
+}
+
+.payment button.wish-btn:hover {
+  background-color: #4c4c4c;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    
+}
+
+
+
+    </style>
+     <link th:href="@{/css/header.css}" rel="stylesheet" />
+</head>
+<body>
+ 	<header th:replace="etc/header :: headerFragment"></header>
+ 	<br><br>
+   
+    <div class="product">
+       <div class="product-info">
+              <img th:if="${product.productImage1 != null}" th:src="@{'/products/image/' + ${product.productNo} + '/1'}" alt="Product Image 1"
+                   style="margin-right: 20px; max-width: 500px; max-height: 500px;">
+
+              <div class="right">
+                 <h3 style="font-size:22px;" th:text="${product.productName}"></h3>
+                 <p th:text="${product.productDescription}"></p>
+                 <p>가격: <span class="product-price" th:text="${product.productPrice}"></span></p>
+                 <p>Category : <span class="product-category" th:text="${product.category.categoryName}"></span></p>
+
+               <div class="option">
+                  <div class="price-box">
+                     <div class="qty-box">
+                        <input th:field="${basketDTO.basketAmount}" type="hidden" class="basket-amount" placeholder="총가격"/>
+                        <input th:value="${product.productNo}" th:name="product" type="hidden" id="productNo" />
+                        <button class="decrease-btn">-</button>
+                        <!-- <input type="number" th:field="${basketProductDTO.basketQty}" value="1" /> -->
+                        <input type="number" name="basketQty" id="basketQty" value="1" />
+                        <button class="increase-btn">+</button>
+                     </div>
+
+                     <div class="amount-box" style="display:flex; align-items: center;">
+                        <span class="amount">
+                           <!--  th:field="${basketProductDTO.basketProductAmount}" -->
+                           <input type="number" class="amount-input" id="basketProductAmount" name="basketProductAmount" th:value="${product.productPrice}" />
+                           <span style="font-size:20px;">원</span>
+                        </span>
+<!--                         <button class="delete-btn">
+                           x
+                        </button> -->
+                     </div>
+                     
+                  </div>
+
+   
+               </div>
+               
+               <div class="payment">
+                  <button class="basket-btn">장바구니 담기</button>
+                  <button class="buy-btn">구매하기</button>
+               </div>
+              </div>
+              <br><br><br>
+              
+               
+
+            
+
+       </div>
+        <img th:if="${product.productImage2 != null}" th:src="@{'/products/image/' + ${product.productNo} + '/2'}" alt="Product Image 2" class="product-bottom-img">
+        <img th:if="${product.productImage3 != null}" th:src="@{'/products/image/' + ${product.productNo} + '/3'}" alt="Product Image 3" class="product-bottom-img">
+
+        
+
+    </div>
+    
+
+            
+<script type="text/javascript">
+   const increaseBtn = document.querySelector('.increase-btn');
+   const decreaseBtn = document.querySelector('.decrease-btn');
+   const basketQty = document.querySelector('#basketQty');
+   const amountInput = document.querySelector('.amount-input');
+   const productPrice = document.querySelector('.product-price').innerText;
+   const basketAmount = document.querySelector('.basket-amount');
+
+   const productNo = document.querySelector('#productNo').value;
+   console.log(productNo)
+   
+   
+   increaseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      basketQty.value++;
+      amountInput.value = productPrice * basketQty.value;
+      basketAmount.value = productPrice * basketQty.value;
+      console.log(basketQty.value);
+   })
+   
+   decreaseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+       if (parseInt(basketQty.value) > 1) {
+          basketQty.value--;
+          amountInput.value = productPrice * basketQty.value;
+           console.log(basketQty.value);
+      }
+   })
+
+
+     document.querySelector('.basket-btn').addEventListener('click', function() {
+         event.preventDefault();
+         let data = {
+             basketProductDTOs : [
+                 {
+                     basketQty : basketQty.value,
+                     productDTO : {
+                         productNo : productNo,
+                     },
+                 }
+             ]
+         };
+
+         fetch("https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/create", {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+             },
+             body: JSON.stringify(data),
+         })
+             .then(response => {
+                 if (response.ok) {
+                     if (cartModal()) {
+                         window.location.href = "https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/cart";
+                     }
+                 } else {
+                     console.log("error")
+                 }
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+             });
+     });
+
+
+   function cartModal() {
+       return confirm("장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?");
+   }
+
+
+   document.querySelector('.buy-btn').addEventListener('click', function() {
+       event.preventDefault();
+       let basketQty = document.getElementById('basketQty').value;
+       let productNo = document.getElementById('productNo').value;
+
+       // 데이터를 URL 매개변수 형식으로 조합
+       let queryString = `basketQty=${encodeURIComponent(basketQty)}&productNo=${encodeURIComponent(productNo)}`;
+
+       fetch(`https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/cart/order?${queryString}`, {
+           method: 'GET',
+       })
+           .then(response => {
+               if (response.ok) {
+                   window.location.href = `/cart/order?${queryString}`;
+               } else {
+                   // 실패 처리
+               }
+           })
+           .catch(error => {
+               console.error('Error:', error);
+           });
+   });
+
+   
+
+
+
+   
+</script>
+</body>
+</html>

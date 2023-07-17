@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link th:href="@{/css/footer.css}" rel="stylesheet" />
+
+
+<body>
+<div th:fragment="footerFragment">
+    <footer class="footer">
+    <main class="footer-container">
+    <div class="f-box" style="margin-left: 50px; margin-right: 50px;">
+        <h3>Utility menu</h3>
+        <ul class="utilMenu">
+            <li><a href="/guide">Shopping guide</a></li>
+            <li><a href="/terms">Terms of Use</a></li>
+            <li><a href="/policy">Privacy policy</a></li>
+            <li><span style="font-size:10px;">Copyright © <strong>Third movement.</strong>.
+                All rights reserved.</span></li>
+        </ul>
+    </div>
+    <div class="f-box" style="flex: 1;">
+        <h3>Customer Service</h3>
+        <ul class="xans-element- xans-layout xans-layout-boardinfo">
+            <li class="xans-record-"><a href="/review">REVIEW</a></li>
+            <li class="xans-record-"><a href="/board">Q&A</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+    </div>
+    <div class="f-box" style="margin-left: 100px;">
+        <h3>Info</h3>
+        <p class="address">
+            <span>NEXT INC.<br></span>
+            <span>CEO: 김 진<br></span>
+            <span>Business license: 000-81-01111<br></span>
+            <span>Mail-order: 2022-안산상록수-0961</span>
+            
+        </p>
+    </div>
+    <div class="f-box" style="margin-left: 100px;">
+        <h3>Contact</h3>
+        <p>Return address: 000000 경기도 안산시 상록구 이젠컴퓨터아카데미</p>
+	        <p>Return Service Tel: CJ대한통운 1588-1111</p>
+	        <p>Customer Service Hour: AM 10:30 ~ PM 17:30 (Sat, Sun, Holiday off) Lunch break PM 13:00~14:00</p>
+	        <p>Office: 3F, 162, Gangnam-daero, Gangnam-gu, Seoul, Republic of Korea</p>
+	        <p>Office Hour: AM 10:00 ~ PM 19:00 (Sat, Sun, Holiday off) Lunch break PM 13:00~14:00</p>
+	        <p>E-Mail: a@aa.com (협찬문의)</p>
+	    </div>
+	</main>
+    </footer>
+    </div>
+</body>
+
+</html>

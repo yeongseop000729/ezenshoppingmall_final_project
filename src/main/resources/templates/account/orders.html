@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <link th:href="@{/css/header.css}" rel="stylesheet" />
+ <link th:href="@{/css/footer.css}" rel="stylesheet" />
+</head>
+  <header th:replace="etc/header :: headerFragment"></header>
+<style>
+.order-container {
+	width:1000px;
+	margin: 0 auto;
+}
+.order-container table {
+	border-collapse: collapse;
+	width:100%;
+	margin-bottom:40px;
+}
+
+.order-container table td {
+	border: 1px solid #4a4a4a66;
+	border-top: 1px solid black;
+	padding: 10px;
+	font-size:13px;
+	color:#222222;
+}
+.order-container table td.td-left {
+	color:black;
+}
+.order-container .bottom-btns {text-align:center;}
+.order-container #payment-btn {
+	outline: none;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    width: 180px;
+    background: linear-gradient(to left, #848484, #151515);
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+.order-container #payment-btn:hover {
+	opacity: 0.8;
+}
+
+.product-context .product-table .product-list {
+	display: flex;
+    justify-content: space-between;
+}
+
+.product-context .product-table .product-list .product-qty {
+	font-size:15px;
+}
+
+</style>
+<body>
+
+	<div class="order-container">
+
+
+		<div class="buyer-context">
+			<h3>주문/결제</h3>
+			<table class="buyer-table">
+				<colgroup>
+					<col width="135">
+					<col width="*">
+				</colgroup>
+				<tbody>
+<!-- 					<tr>-->
+<!--						<td class="td-left">이름</td>		-->
+<!--						<td th:text="${member.memberName}"></td>-->
+<!--					</tr>-->
+<!--					<tr>-->
+<!--						<td class="td-left">이메일</td>-->
+<!--						<td th:text="${member.memberEmail}"></td>-->
+<!--					</tr>-->
+<!--					<tr>-->
+<!--						<td class="td-left">휴대폰 번호</td>-->
+<!--						<td th:text="${member.memberPhone}"></td>-->
+<!--					</tr> -->
+				</tbody>
+			</table>
+		</div>
+
+		<div class="delivery-context">
+			<h3>받는사람정보</h3>
+			<table class="delivery-table">
+				<colgroup>
+					<col width="135">
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-left">이름</td>
+						<td>
+							<input type="text" name="orderReceiverName" id="orderReceiverName"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="td-left">배송주소</td>
+						<td>
+							<input type="text" name="orderReceiverAddress" id="orderReceiverAddress" />
+						</td>
+					</tr>
+					<tr>
+						<td class="td-left">연락처</td>
+						<td>
+							<input type="text" name="orderReceiverPhone" id="orderReceiverPhone" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="product-context">
+			<h3>배송정보</h3>
+			<table class="product-table">
+				<colgroup>
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<tr th:each="basketProduct : ${basketProductDTOs}">
+
+						<td class="product-list">
+							<input type="hidden" th:value="${basketProduct.basketProductNo}" class="basketProductNo"/>
+							<input type="hidden" name="orderProducts.product"  th:value="${basketProduct.product.productNo}" class="productNo"/>
+							<span th:text="${basketProduct.product.productName}"></span>
+							<input type="hidden" name="orderProducts.orderQty" th:value="${basketProduct.basketQty}" class="orderQty"/>
+							<span th:text="|${basketProduct.basketQty}개|" class="product-qty"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="order-context">
+			<h3>결제정보</h3>
+			<table class="order-table">
+				<colgroup>
+					<col width="135">
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-left">총상품가격</td>
+						<th:block th:each="basketProduct : ${basketProductDTOs}">
+							<td th:text="${basketProduct.basketProductAmount}"></td>
+							<input type="hidden" th:value="${basketProduct.basketProductAmount}" class="basketProductAmount" />
+						</th:block>
+					</tr>
+					<tr>
+						<th:block>
+							<td class="td-left">총결제금액</td>
+							<td th:text="${totalAmount}"></td>
+							<td style="display: none;">
+								<input type="hidden" th:value="${totalAmount}" name="orderPaymentAmount" id="orderPaymentAmount"/>
+							</td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="bottom-btns">
+			<button id="payment-btn">결제하기</button>
+		</div>
+
+
+	</div>
+
+
+<script>
+
+
+const paymentBtn = document.querySelector('#payment-btn');
+const orderQty = document.querySelectorAll('.orderQty');
+const orderProductAmount = document.querySelectorAll('.basketProductAmount');
+const productNo = document.querySelectorAll('.productNo');
+const basketProductNo = document.querySelectorAll('.basketProductNo');
+
+const orderReceiverName = document.querySelector("#orderReceiverName");
+const orderReceiverPhone = document.querySelector("#orderReceiverPhone");
+const orderReceiverAddress = document.querySelector("#orderReceiverAddress");
+const orderPaymentAmount = document.querySelector("#orderPaymentAmount");
+
+paymentBtn.addEventListener('click', e => {
+	  e.preventDefault();
+
+	  const data = {
+	    orderReceiverName: orderReceiverName.value,
+	    orderReceiverPhone: orderReceiverPhone.value,
+	    orderReceiverAddress: orderReceiverAddress.value,
+	    orderPaymentAmount: orderPaymentAmount.value,
+	    orderProducts: []
+	  };
+
+	  basketProductNo.forEach((ele, index) => {
+	    const orderProduct = {
+	      orderQty: orderQty[index].value,
+	      orderProductAmount: orderProductAmount[index].value,
+	      productNo: productNo[index].value
+	    };
+	    
+	    data.orderProducts.push(orderProduct);
+	  });
+
+	  console.log(data);
+
+	  fetch("https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/order/creates", {
+	    method: 'POST',
+	    headers: {
+	      'Content-Type': 'application/json',
+	    },
+	    body: JSON.stringify(data),
+	  })
+	    .then(response => {
+	      if (response.ok) {
+	        window.location.href = "https://port-0-finalprojectfinal-20zynm2mlk26fzy4.sel4.cloudtype.app/products";
+	      } else {
+	        // 요청이 실패한 경우의 처리
+	      }
+	    })
+	    .catch(error => {
+	      console.error('Error:', error);
+	    });
+	});
+
+ 
+</script>
+
+
+
+<br><br>
+	<footer th:replace="etc/footer :: footerFragment"></footer>	
+</body>
+</html>

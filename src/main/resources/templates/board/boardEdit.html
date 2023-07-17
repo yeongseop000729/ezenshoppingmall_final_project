@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Board</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet" />
+    <link th:href="@{/css/footer.css}" rel="stylesheet" />
+    <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px; /* 수정: 박스 너비 조정 */
+  margin: 0 auto; /* 수정: 가운데 정렬 */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+button[type="submit"] {
+  background-color: #4c4c4c;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #4c4c4c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+    
+    </style>
+</head>
+<body>
+ <header th:replace="etc/header :: headerFragment"></header>
+ <br><br><br>
+    <h2>문의글 수정</h2>
+    <form th:object="${board}" 
+    th:action="@{/board/edit/{boardNo}(boardNo=${board.boardNo})}" method="post">
+        <input type="hidden" th:field="*{boardNo}" />
+        <input type="hidden" th:field="*{member.memberId}" />
+		
+		 <div>
+            <label>Board No:</label>
+            <input type="text" th:field="*{boardNo}" readonly="readonly" />
+        </div>
+		
+        <div>
+            <label>Member ID:</label>
+            <input type="text" th:field="*{member.memberId}" readonly="readonly" />
+        </div>
+        <div> 
+            <label>Title:</label>
+            <input type="text" th:field="*{boardTitle}" />
+        </div>
+
+        <div>
+            <label>Content:</label>
+            <textarea th:field="*{boardContent}"></textarea>
+        </div>
+
+        <button type="submit">수정하기</button>
+    </form>
+
+    <a href="/board">돌아가기</a>
+    <br><br><br>
+    <footer th:replace="etc/footer :: footerFragment"></footer>
+</body>
+</html>
